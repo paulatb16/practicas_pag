@@ -2,7 +2,7 @@
 // IMPORTANTE: El include de GLAD debe estar siempre ANTES de el de GLFW
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
+ float r=0.6, g=0.6, b=0.6;
 // - Esta función callback será llamada cuando GLFW produzca algún error
 void error_callback ( int errno, const char* desc )
 { std::string aux (desc);
@@ -49,12 +49,41 @@ void scroll_callback ( GLFWwindow *window, double xoffset, double yoffset )
 { std::cout << "Movida la rueda del ratón " << xoffset
 << " Unidades en horizontal y " << yoffset
 << " unidades en vertical" << std::endl;
-    if ( xoffset != 0 || yoffset != 0 ) {
-        std::cout << "Cambio de color" << std::endl;
 
-
-
+   //cambiamos el color si se mueve la rueda hacia arriba haciendolo más negro, y hacia abajo más blanco
+    if (yoffset > 0) {
+        r = r + 0.01;
+        g = g + 0.01;
+        b = b + 0.01;
     }
+    else if (yoffset < 0) {
+        r = r - 0.01;
+        g = g - 0.01;
+        b = b - 0.01;
+    }
+    //para la X voy a hacer un cambio que no sea totalmente uniforme en los 3 colores sino que cada uno cambie con un valor distinto
+    if (xoffset > 0) {
+        r = r + 0.05;
+        g = g + 0.02;
+        b = b + 0.06;
+    }
+    if (xoffset < 0) {
+        r = r - 0.07;
+        g = g - 0.03;
+        b = b + 0.09;
+    }
+
+    // si se pasa del 1, se quedará en 1, y si se va a pasar del 0 por abajo, se quedará en 0, para no salir de los
+    // límites de los colores
+    if (r > 1.0f) {
+        r = 1.0f; g = 1.0f; b = 1.0f;
+    }
+    if (r < 0.0f) {
+        r = 0.0f; g = 0.0f; b = 0.0f;
+    }
+
+    
+
 }
 
 
@@ -117,11 +146,8 @@ int main() {
 
 
 
-    // - Establecemos un gris medio como color con el que se borrará el
-    // frame buffer.
-    // No tiene por qué ejecutarse en cada paso por el ciclo de eventos.
 
-    glClearColor ( 0.6, 0.6, 0.6, 1.0 );
+
     // - Le decimos a OpenGL que tenga en cuenta la profundidad a la hora de
     // dibujar.
     // No tiene por qué ejecutarse en cada paso por el ciclo de eventos.
@@ -133,6 +159,9 @@ int main() {
     { // - Obtiene y organiza los eventos pendientes, tales como pulsaciones
         // de teclas o de ratón, etc. Siempre al final de cada iteración del
         // ciclo de eventos y después de glfwSwapBuffers ( window );
+        glClearColor ( r, g, b, 1.0 ); //le decimos que colores queremos al limpiar la pantalla
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //para que se pinte
+        glfwSwapBuffers ( window ); //intercambio de ventanas para que se muestre el nuevo color
         glfwPollEvents ();
     }
 
