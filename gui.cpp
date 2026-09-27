@@ -5,43 +5,55 @@
 #include <imgui_impl_opengl3.h>
 
 namespace PAG {
+    gui* gui::instancia = nullptr;
 
-gui* gui::instancia = nullptr;
+    gui::gui() {}
+    gui::~gui() {}
 
-gui::gui() {}
-gui::~gui() {}
-
-gui& gui::getInstancia() {
-    if (!instancia) {
-        instancia = new gui();
+    gui& gui::getInstancia() {
+        if (!instancia) {
+            instancia = new gui();
+        }
+        return *instancia;
     }
-    return *instancia;
-}
- //INICIALIZO
-void gui::inicializar(GLFWwindow* window) {
-    // Inicialización básica de ImGui
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 430");
-}
+    //INICIALIZO
+    void gui::inicializar(GLFWwindow* window) {
+        // Inicialización básica de ImGui
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO& io = ImGui::GetIO();
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+        ImGui_ImplGlfw_InitForOpenGL(window, true);
+        ImGui_ImplOpenGL3_Init("#version 430");
+    }
 
     //DIBUJO VENTANAS
-void gui::render() {
+    void gui::render() {
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_Once); //ventana de los mensajes
+        if (ImGui::Begin("Mensajes")) {
+            ImGui::Text("%s", Renderer::getInstancia().getRendererInfo().c_str());
+            ImGui::Text("%s", Renderer::getInstancia().getVendorInfo().c_str());
+            ImGui::Text("%s", Renderer::getInstancia().getVersionInfo().c_str());
+            ImGui::Text("%s", Renderer::getInstancia().getShadingLanguageVersionInfo().c_str());
 
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-    ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_Once); //ventana de los mensajes
-    if (ImGui::Begin("Mensajes")) {
-        ImGui::Text("%s", Renderer::getInstancia().getRendererInfo().c_str());
-        ImGui::Text("%s", Renderer::getInstancia().getVendorInfo().c_str());
-        ImGui::Text("%s", Renderer::getInstancia().getVersionInfo().c_str());
-        ImGui::Text("%s", Renderer::getInstancia().getShadingLanguageVersionInfo().c_str());
-    }
-    ImGui::End();
+            ImGui::BeginChild("Scroll mensajes", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+            for (const auto& msg : mensajes) {
+                ImGui::TextUnformatted(msg.c_str());
+            }
+
+            //esto sirve para que se vaya viendo siempre el mensaje mas reciente
+            if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY()) {
+                ImGui::SetScrollHereY(1.0f);
+            }
+            ImGui::EndChild();
+        }
+
+        ImGui::End();
+
+
 
     ImGui::SetNextWindowPos(ImVec2(350, 10), ImGuiCond_Once); //ventana del color picker
     if (ImGui::Begin("Fondo")) {
@@ -66,16 +78,15 @@ void gui::finalizar() {
 }
 
 //GESTIONO CAPTURA DE EVENTOS EN CALLBACKS
-    void procesaClick(int button, bool presionado) {
+void gui::procesaClick(int button, bool presionado) {
     ImGuiIO& io = ImGui::GetIO ();
     io.AddMouseButtonEvent ( button, presionado );
-
 }
-    void procesaScroll(double xoffset, double yoffset) {
+void gui::procesaScroll(double xoffset, double yoffset) {
     ImGuiIO& io = ImGui::GetIO();
     io.AddMouseWheelEvent(xoffset,yoffset);
 }
-    void procesaTeclado(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void  gui::procesaTeclado(GLFWwindow* window, int key, int scancode, int action, int mods) {
     ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods); //esto lo hago porque no deja que se metan int tiene que ser un tipo especial, y esta funcion te los traduce automaticamente
 }
     bool gui::capturaRaton() {
@@ -84,6 +95,8 @@ void gui::finalizar() {
     bool gui::capturaTeclado() {
     return ImGui::GetIO().WantCaptureKeyboard;
 }
-
+    void gui::addMensaje(const std::string& texto) {
+    mensajes.push_back(texto);
+}
 
 }

@@ -16,7 +16,7 @@ float r = 0.6, g = 0.6, b = 0.6;
 void error_callback(int errno, const char *desc) {
     std::string aux(desc);
 
-    std::cout << "Error de GLFW número " << errno << ": " << aux << std::endl;
+    PAG::gui::getInstancia().addMensaje("error numero"+std::to_string(errno)+":"+aux);
 }
 
 // - Esta función callback será llamada cada vez que el área de dibujo
@@ -36,7 +36,7 @@ void window_refresh_callback(GLFWwindow *window) {
 
     glfwSwapBuffers(window);
 
-    std::cout << "Refresh callback called" << std::endl;
+    PAG::gui::getInstancia().addMensaje("refresh callback called");
 }
 
 // - Esta función callback será llamada cada vez que se cambie el tamaño
@@ -46,7 +46,7 @@ void window_refresh_callback(GLFWwindow *window) {
 void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     PAG::Renderer::getInstancia().viewport(0,0,width,height);
 
-    std::cout << "Resize callback called" << std::endl;
+    PAG::gui::getInstancia().addMensaje("resize callback called");
 }
 
 // - Esta función callback será llamada cada vez que se pulse una tecla
@@ -64,7 +64,8 @@ PAG::gui::getInstancia().procesaTeclado(window,key,scancode,action,mods);
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
 
-    std::cout << "Key callback called" << std::endl;
+
+    PAG::gui::getInstancia().addMensaje("key callback called");
 }
 
 // - Esta función callback será llamada cada vez que se pulse algún botón
@@ -77,9 +78,9 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
         return;
     }
     if (action == GLFW_PRESS) {
-        std::cout << "Pulsado el botón: " << button << std::endl;
+        PAG::gui::getInstancia().addMensaje("haciendo click");
     } else if (action == GLFW_RELEASE) {
-        std::cout << "Soltado el botón: " << button << std::endl;
+        PAG::gui::getInstancia().addMensaje("soltando click");
     }
 }
 
@@ -96,12 +97,7 @@ PAG::gui::getInstancia().procesaScroll(xoffset, yoffset);
         return;
     }
 
-    std::cout << "Movida la rueda del ratón " << xoffset
-
-            << " Unidades en horizontal y " << yoffset
-
-            << " unidades en vertical" << std::endl;
-
+    PAG::gui::getInstancia().addMensaje("movida la rueda del ratón"+std::to_string(xoffset)+" unidades en horazontal "+std::to_string(yoffset)+ " unidades en vertical");
 
     //cambiamos el color si se mueve la rueda hacia arriba haciendolo más negro, y hacia abajo más blanco
 
@@ -159,7 +155,7 @@ PAG::gui::getInstancia().procesaScroll(xoffset, yoffset);
 
 
 int main() {
-    std::cout << "Starting Application PAG - Prueba 01" << std::endl;
+    PAG::gui::getInstancia().addMensaje("STARTING APP PAG");
 
     // - Este callback hay que registrarlo ANTES de llamar a glfwInit
 
@@ -167,7 +163,7 @@ int main() {
 
 
     if (glfwInit() != GLFW_TRUE) {
-        std::cout << "Failed to initialize GLFW" << std::endl;
+        PAG::gui::getInstancia().addMensaje("failed to initialize GLFW");
 
         return -1;
     }
@@ -201,7 +197,7 @@ int main() {
     // - Comprobamos si la creación de la ventana ha tenido éxito.
 
     if (window == nullptr) {
-        std::cout << "Failed to open GLFW window" << std::endl;
+        PAG::gui::getInstancia().addMensaje("failed to open window");
 
         glfwTerminate(); // - Liberamos los recursos que ocupaba GLFW.
 
@@ -218,7 +214,7 @@ int main() {
     // - Ahora inicializamos GLAD.
 
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
-        std::cout << "GLAD initialization failed" << std::endl;
+        PAG::gui::getInstancia().addMensaje("GLAD FAILED");
 
         glfwDestroyWindow(window); // - Liberamos los recursos que ocupaba GLFW.
 
@@ -231,17 +227,7 @@ int main() {
 
 
 
-    // - Interrogamos a OpenGL para que nos informe de las propiedades del contexto
 
-    // 3D construido.
-
-    std::cout << PAG::Renderer::getInstancia().getRendererInfo()<< std::endl
-
-            << PAG::Renderer::getInstancia().getVendorInfo() << std::endl
-
-            << PAG::Renderer::getInstancia().getVersionInfo() << std::endl
-
-            << PAG::Renderer::getInstancia().getShadingLanguageVersionInfo() << std::endl;
 
 
     // - Registramos los callbacks que responderán a los eventos principales
@@ -289,7 +275,7 @@ int main() {
     }
 
 
-    std::cout << "Finishing application pag prueba" << std::endl;
+    PAG::gui::getInstancia().addMensaje("TERMINANDO APP");
     PAG::gui::getInstancia().finalizar();
     glfwDestroyWindow ( window );
     window = nullptr;
