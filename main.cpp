@@ -54,7 +54,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
 // dirigida al área de dibujo OpenGL.
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
-PAG::gui::getInstancia().procesaTeclado(window,key,scancode,action,mods);
+
     if (PAG::gui::getInstancia().capturaTeclado()) {
         return;
     }
@@ -73,7 +73,7 @@ PAG::gui::getInstancia().procesaTeclado(window,key,scancode,action,mods);
 // del ratón sobre el área de dibujo OpenGL.
 
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
-    PAG::gui::getInstancia().procesaClick(button, action == GLFW_PRESS);
+
     if (PAG::gui::getInstancia().capturaRaton()) {
         return;
     }
@@ -91,7 +91,7 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
 
-PAG::gui::getInstancia().procesaScroll(xoffset, yoffset);
+
 
     if (PAG::gui::getInstancia().capturaRaton()) {
         return;

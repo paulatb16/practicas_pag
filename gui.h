@@ -21,9 +21,7 @@ namespace PAG {
         void render();
         void finalizar();
 
-        void procesaClick(int button, bool presionado);
-        void procesaScroll(double xoffset, double yoffset);
-        void procesaTeclado(GLFWwindow* window, int key, int scancode, int action, int mods);
+
         bool capturaRaton();
         bool capturaTeclado();
         void addMensaje(const std::string& texto);

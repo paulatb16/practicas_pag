@@ -78,17 +78,7 @@ void gui::finalizar() {
 }
 
 //GESTIONO CAPTURA DE EVENTOS EN CALLBACKS
-void gui::procesaClick(int button, bool presionado) {
-    ImGuiIO& io = ImGui::GetIO ();
-    io.AddMouseButtonEvent ( button, presionado );
-}
-void gui::procesaScroll(double xoffset, double yoffset) {
-    ImGuiIO& io = ImGui::GetIO();
-    io.AddMouseWheelEvent(xoffset,yoffset);
-}
-void  gui::procesaTeclado(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods); //esto lo hago porque no deja que se metan int tiene que ser un tipo especial, y esta funcion te los traduce automaticamente
-}
+
     bool gui::capturaRaton() {
         return ImGui::GetIO().WantCaptureMouse;
     }
