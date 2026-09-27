@@ -6,6 +6,7 @@
 #define P1_RENDERER_H
 #include <glad/glad.h>
 #include <GL/gl.h>
+#include "string"
 
 namespace PAG {
     class Renderer {
@@ -18,8 +19,15 @@ namespace PAG {
     public:
         static Renderer& getInstancia();
         void refrescar();
-        void viewport(int width, int height);
-        void callback(GLFWwindow *window, int key, int scancode, int action, int mods);
+        void viewport(int x, int y,int width, int height);
+        std::string getRendererInfo();
+        std::string getVendorInfo();
+        std::string getVersionInfo();
+        std::string getShadingLanguageVersionInfo();
+        void enable();
+        void ClearColor(float r, float g, float b, float a);
+        void Clear();
+
     };
 } // PAG
 
