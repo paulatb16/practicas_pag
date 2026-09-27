@@ -7,7 +7,8 @@ file( GLOB MY_FILES *.cpp ) # Código fuente de tu proyecto
 file( GLOB GLAD_FILES GLAD/src/*.c ) # Código fuente de GLAD
 
 add_executable( ${PROJECT_NAME} ${MY_FILES}
-        ${GLAD_FILES} )
+        ${GLAD_FILES}
+        main.cpp)
 target_include_directories( ${PROJECT_NAME} PUBLIC GLAD/include )
 
 find_package(glfw3 CONFIG REQUIRED)
