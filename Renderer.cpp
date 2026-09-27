@@ -1,9 +1,8 @@
 //
 // Created by pauli on 21/09/2026.
 //
-
-#include "Renderer.h"
 #include <glad/glad.h>
+#include "Renderer.h"
 #include <GL/gl.h>
 #include <iostream>
 using namespace std;

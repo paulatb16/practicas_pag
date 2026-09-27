@@ -5,9 +5,9 @@
 
 #include <GLFW/glfw3.h>
 #include "Renderer.h"
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
+
+
+#include "gui.h"
 
 float r = 0.6, g = 0.6, b = 0.6;
 
@@ -210,12 +210,7 @@ int main() {
 
         return -3;
     }
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext ();
-    ImGuiIO& io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-    ImGui_ImplGlfw_InitForOpenGL ( window, true );
-    ImGui_ImplOpenGL3_Init ();
+
 
 
     // - Interrogamos a OpenGL para que nos informe de las propiedades del contexto
@@ -251,6 +246,7 @@ int main() {
     // No tiene por qué ejecutarse en cada paso por el ciclo de eventos.
 
     PAG::Renderer::getInstancia().enable();
+    PAG::gui::getInstancia().inicializar(window);
 
     // - Ciclo de eventos de la aplicación. La condición de parada es que la
 
@@ -264,27 +260,20 @@ int main() {
         // de teclas o de ratón, etc. Siempre al final de cada iteración del
 
         // ciclo de eventos y después de glfwSwapBuffers ( window );
-
-         //le decimos que colores queremos al limpiar la pantalla
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        PAG::Renderer::getInstancia().refrescar(); //para que se pinte
+        PAG::Renderer::getInstancia().refrescar(); //para que se pinte VA ANTES QUE RENDER DE GUI O SINO SE SUPOERPONE
+        PAG::gui::getInstancia().render(); // crear las ventanas de imgui
 
         glfwSwapBuffers(window); //intercambio de ventanas para que se muestre el nuevo color
 
         glfwPollEvents();
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData ( ImGui::GetDrawData() );
+
 
     }
 
 
     std::cout << "Finishing application pag prueba" << std::endl;
-
-    glfwDestroyWindow(window); // - Cerramos y destruimos la ventana de la aplicación.
-
+    PAG::gui::getInstancia().finalizar();
+    glfwDestroyWindow ( window );
     window = nullptr;
 
     glfwTerminate(); // - Liberamos los recursos que ocupaba GLFW.

@@ -4,7 +4,6 @@
 
 #ifndef P1_RENDERER_H
 #define P1_RENDERER_H
-#include <glad/glad.h>
 #include <GL/gl.h>
 #include "string"
 
