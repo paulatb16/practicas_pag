@@ -5,6 +5,9 @@
 
 #include <GLFW/glfw3.h>
 #include "Renderer.h"
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 float r = 0.6, g = 0.6, b = 0.6;
 
@@ -207,6 +210,13 @@ int main() {
 
         return -3;
     }
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext ();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    ImGui_ImplGlfw_InitForOpenGL ( window, true );
+    ImGui_ImplOpenGL3_Init ();
+
 
     // - Interrogamos a OpenGL para que nos informe de las propiedades del contexto
 
@@ -256,12 +266,18 @@ int main() {
         // ciclo de eventos y después de glfwSwapBuffers ( window );
 
          //le decimos que colores queremos al limpiar la pantalla
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
 
-        PAG::Renderer::getInstancia().Clear(); //para que se pinte
+        PAG::Renderer::getInstancia().refrescar(); //para que se pinte
 
         glfwSwapBuffers(window); //intercambio de ventanas para que se muestre el nuevo color
 
         glfwPollEvents();
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData ( ImGui::GetDrawData() );
+
     }
 
 
