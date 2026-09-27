@@ -17,7 +17,7 @@ gui& gui::getInstancia() {
     }
     return *instancia;
 }
-
+ //INICIALIZO
 void gui::inicializar(GLFWwindow* window) {
     // Inicialización básica de ImGui
     IMGUI_CHECKVERSION();
@@ -28,6 +28,7 @@ void gui::inicializar(GLFWwindow* window) {
     ImGui_ImplOpenGL3_Init("#version 430");
 }
 
+    //DIBUJO VENTANAS
 void gui::render() {
 
     ImGui_ImplOpenGL3_NewFrame();
@@ -44,8 +45,8 @@ void gui::render() {
 
     ImGui::SetNextWindowPos(ImVec2(350, 10), ImGuiCond_Once); //ventana del color picker
     if (ImGui::Begin("Fondo")) {
-        static float color[4] = { 0.6f, 0.6f, 0.6f,1.0f};
-        ImGuiColorEditFlags flags = ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_AlphaBar;
+        static float color[4] = { 0.6f, 0.6f, 0.6f,0.6f};
+        ImGuiColorEditFlags flags = ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_AlphaBar; //esto es para que sea la rueda en vez del cuadrado y para que aparezca la barra de alpha
         if (ImGui::ColorPicker4("Color para el fondo", color,flags)) {
 
             Renderer::getInstancia().ClearColor(color[0], color[1], color[2], color[3]);
@@ -57,10 +58,32 @@ void gui::render() {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
+    //FINALIZO
 void gui::finalizar() {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
 
-} // namespace PAG
+//GESTIONO CAPTURA DE EVENTOS EN CALLBACKS
+    void procesaClick(int button, bool presionado) {
+    ImGuiIO& io = ImGui::GetIO ();
+    io.AddMouseButtonEvent ( button, presionado );
+
+}
+    void procesaScroll(double xoffset, double yoffset) {
+    ImGuiIO& io = ImGui::GetIO();
+    io.AddMouseWheelEvent(xoffset,yoffset);
+}
+    void procesaTeclado(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods); //esto lo hago porque no deja que se metan int tiene que ser un tipo especial, y esta funcion te los traduce automaticamente
+}
+    bool gui::capturaRaton() {
+        return ImGui::GetIO().WantCaptureMouse;
+    }
+    bool gui::capturaTeclado() {
+    return ImGui::GetIO().WantCaptureKeyboard;
+}
+
+
+}

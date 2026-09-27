@@ -18,6 +18,12 @@ namespace PAG {
 
         void render();
         void finalizar();
+
+        void procesaClick(int button, int action);
+        void procesaScroll(double xoffset, double yoffset);
+        void procesaTeclado(GLFWwindow* window, int key, int scancode, int action, int mods);
+        bool capturaRaton();
+        bool capturaTeclado();
     };
 
 }

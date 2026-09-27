@@ -54,6 +54,12 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
 // dirigida al área de dibujo OpenGL.
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods) {
+PAG::gui::getInstancia().procesaTeclado(window,key,scancode,action,mods);
+    if (PAG::gui::getInstancia().capturaTeclado()) {
+        return;
+    }
+
+
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
@@ -66,6 +72,10 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 // del ratón sobre el área de dibujo OpenGL.
 
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
+    PAG::gui::getInstancia().procesaClick(button, action == GLFW_PRESS);
+    if (PAG::gui::getInstancia().capturaRaton()) {
+        return;
+    }
     if (action == GLFW_PRESS) {
         std::cout << "Pulsado el botón: " << button << std::endl;
     } else if (action == GLFW_RELEASE) {
@@ -73,11 +83,19 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
     }
 }
 
+
 // - Esta función callback será llamada cada vez que se mueva la rueda
 
 // del ratón sobre el área de dibujo OpenGL.
 
 void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
+
+PAG::gui::getInstancia().procesaScroll(xoffset, yoffset);
+
+    if (PAG::gui::getInstancia().capturaRaton()) {
+        return;
+    }
+
     std::cout << "Movida la rueda del ratón " << xoffset
 
             << " Unidades en horizontal y " << yoffset
