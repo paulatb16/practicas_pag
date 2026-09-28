@@ -251,6 +251,8 @@ int main() {
 
     PAG::Renderer::getInstancia().enable();
     PAG::gui::getInstancia().inicializar(window);
+    PAG::Renderer::getInstancia().creaShaderProgram ();
+    PAG::Renderer::getInstancia().creaModelo ();
 
     // - Ciclo de eventos de la aplicación. La condición de parada es que la
 
