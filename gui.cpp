@@ -85,6 +85,7 @@ void gui::finalizar() {
     bool gui::capturaTeclado() {
     return ImGui::GetIO().WantCaptureKeyboard;
 }
+    //funcion para añadir mensajes y sacarlos por pantalla
     void gui::addMensaje(const std::string& texto) {
     mensajes.push_back(texto);
 }
