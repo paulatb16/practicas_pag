@@ -249,10 +249,18 @@ int main() {
 
     // No tiene por qué ejecutarse en cada paso por el ciclo de eventos.
 
+    std::string error;
+
     PAG::Renderer::getInstancia().enable();
     PAG::gui::getInstancia().inicializar(window);
-    PAG::Renderer::getInstancia().creaShaderProgram ();
-    PAG::Renderer::getInstancia().creaModelo ();
+    if (!PAG::Renderer::getInstancia().creaShaderProgram("pag03", error)) {
+        // Si falló, enviamos el mensaje de error capturado a la GUI
+        PAG::gui::getInstancia().addMensaje(error);
+    } else {
+        PAG::gui::getInstancia().addMensaje("Shader Program creado y enlazado con éxito.");
+    }
+
+    PAG::Renderer::getInstancia().creaModelo();
 
     // - Ciclo de eventos de la aplicación. La condición de parada es que la
 

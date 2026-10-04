@@ -32,9 +32,10 @@ namespace PAG {
         void enable();
         void ClearColor(float r, float g, float b, float a);
         void Clear();
-        void creaShaderProgram( );
+        bool creaShaderProgram(std::string prefijo, std::string &error );
         void creaModelo();
         void inicializaOpenGL();
+        std::string leeArchivoTexto(const std::string& archivo) ;
 
     };
 } // PAG
