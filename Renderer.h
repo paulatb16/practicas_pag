@@ -13,12 +13,6 @@ namespace PAG {
         static Renderer* instancia;
         Renderer();
         ~Renderer();
-        GLuint idVS = 0; // Identificador del vertex shader
-        GLuint idFS = 0; // Identificador del fragment shader
-        GLuint idSP = 0; // Identificador del shader program
-        GLuint idVAO = 0; // Identificador del vertex array object
-        GLuint idVBO = 0; // Identificador del vertex buffer object
-        GLuint idIBO = 0; // Identificador del index buffer object
         GLfloat _colorBorrado[4] = { 0.6f, 0.6f, 0.6f, 1.0f };
 
     public:
@@ -31,11 +25,7 @@ namespace PAG {
         std::string getShadingLanguageVersionInfo();
         void enable();
         void ClearColor(float r, float g, float b, float a);
-        void Clear();
-        bool creaShaderProgram(std::string prefijo, std::string &error );
-        void creaModelo();
         void inicializaOpenGL();
-        std::string leeArchivoTexto(const std::string& archivo) ;
 
     };
 } // PAG

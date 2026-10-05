@@ -14,7 +14,9 @@ add_executable( ${PROJECT_NAME} ${MY_FILES}
         Renderer.h
         ${IMGUI_FILES}
         gui.cpp
-        gui.h)
+        gui.h
+        ShaderProgram.cpp
+        ShaderProgram.h)
 target_include_directories( ${PROJECT_NAME} PUBLIC GLAD/include  imgui/include)
 
 find_package(glfw3 CONFIG REQUIRED)

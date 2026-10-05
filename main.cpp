@@ -254,7 +254,7 @@ int main() {
     PAG::Renderer::getInstancia().enable();
     PAG::gui::getInstancia().inicializar(window);
     if (!PAG::Renderer::getInstancia().creaShaderProgram("pag03", error)) {
-        // Si falló, enviamos el mensaje de error capturado a la GUI
+
         PAG::gui::getInstancia().addMensaje(error);
     } else {
         PAG::gui::getInstancia().addMensaje("Shader Program creado y enlazado con éxito.");
