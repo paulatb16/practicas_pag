@@ -33,6 +33,23 @@ Este patron nos dice que solo debe de haber una instacia de esa clase. Para ello
 
 
 
+## PRACTICA 3 PAG
+En esta práctica se han realizado diversos cambios con respecto a la anterior.
+
+- Primero he creado las funciones necesarias para crear el shader program, y para crear el modelo que se pide, que en este caso es un triángulo. Para ello me he ayudad de las funciones que se me facilitan en el guión.
+
+- A continuación, he hecho la comprobación de errores de las diversas funciones que se llamaban al crear el shader program. He realizado una pequeña modificación, ya que como quería sacar los errores por la ventana de texto creada en la práctica anterior, para que Renderer pueda usar Gui sin que esten enlazadas entre ellas, he hecho que la funcion de crear el shader program sea un bool al que se le pasa una cadena de texto error. De esta manera cuando ocurra algun error, la funcion sustituye la cadena de texto error por el texto del error y devuelve false (para que no siga ejecutando el programa nada), y en el main si la funcion de crear el shader program es false, llama automaticamente a la funcion addMensaje de Gui y le pasa el texto del error para que lo muestre en la ventana.
+
+
+- Después he sustituido el texto que venía en la funcion con el codigo de los shaders. He pasado el texto a dos archivos que empiezan por pag03, y he hecho que desde renderer con una funcion para leer los archivos pueda utilizar estos códigos. Además, por si cambiase el prefijo de los archivos, se le ha pasado un parámetro a la funcion para que busque los archivos que tengan como inicio específicamentr "pag03". Si el archivo se llamase "pag04-vs.glsl" saltaría un error. Así si alguien lo quiere utilizar solo tiene que cambiar el prefijo con el que tengan sus archivos. 
+
+- Por último he añadido color a los vértices, haciendo que estos se interpolen y salga un degradado. Esto lo hago añadiendo un atributo más al codigo del vertex shader, y un atributo de salida que se pasará al fragment shader, y este sacará en pantalla los colores. En el código del render para hacerlo no entrelazado, he hecho dos vectores distintos y he usado las funciones de cada uno de ellos por separado, sin embargo el entrelazado junto ambos en un mismo vector con altos y desplazamientos, que uso en cada función. 
+
+
+- Con respecto a la pregunta que se hace, como cada vértice del triángulo tiene una posición asignada, por ejemplo al agrandar la ventana lo que pasa es que los píxeles se estiran, haciendo así que el mismo triángulo se estire a la vez, lo mismo si se hace más pequeña, los pixeles se encogen
+
+
+
 
 
 

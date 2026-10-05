@@ -195,24 +195,73 @@ bool Renderer::creaShaderProgram(std::string prefijo, std::string &error){
 
 void Renderer::creaModelo()
 {
-    GLfloat vertices[] = { -.5, -.5, 0,
-                            .5, -.5, 0,
-                            .0,  .5, 0 };
     GLuint indices[] = { 0, 1, 2 };
+
+   //no entrlazada
+    GLfloat posiciones[] = {
+        -.5f, -.5f, 0.0f,
+         .5f, -.5f, 0.0f,
+         .0f,  .5f, 0.0f
+    };
+
+    GLfloat colores[] = {
+        1.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 1.0f
+    };
+
+    glGenVertexArrays(1, &idVAO);
+    glBindVertexArray(idVAO);
+
+    //posiciones
+    GLuint vbo[2];
+    glGenBuffers(2, vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+    glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), posiciones, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    //colores
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+    glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), colores, GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
+    glEnableVertexAttribArray(1);
+
+
+    idVBO = vbo[0];
+    glGenBuffers(1, &idIBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idIBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(GLuint), indices, GL_STATIC_DRAW);
+
+
+   //entrelazado comentado
+    /*
+    GLfloat verticesEntrelazados[] = {
+
+        -.5f, -.5f, 0.0f,      1.0f, 0.0f, 0.0f,
+         .5f, -.5f, 0.0f,      0.0f, 1.0f, 0.0f,
+         .0f,  .5f, 0.0f,      0.0f, 0.0f, 1.0f
+    };
 
     glGenVertexArrays(1, &idVAO);
     glBindVertexArray(idVAO);
 
     glGenBuffers(1, &idVBO);
     glBindBuffer(GL_ARRAY_BUFFER, idVBO);
-    glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 18 * sizeof(GLfloat), verticesEntrelazados, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), nullptr);
+    GLsizei stride = 6 * sizeof(GLfloat);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
     glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
 
     glGenBuffers(1, &idIBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idIBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, 3 * sizeof(GLuint), indices, GL_STATIC_DRAW);
+    */
 }
 
 /**
