@@ -74,6 +74,10 @@ Testing/
 
 # carpeta glad
 glad
-GLAD 
+GLAD
+
+# carpeta imgui
+imgui
+imgui.ini 
 
 
