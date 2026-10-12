@@ -5,7 +5,7 @@
 
 #include <GLFW/glfw3.h>
 #include "Renderer.h"
-
+#include "ShaderProgram.h"
 
 #include "gui.h"
 
@@ -253,14 +253,7 @@ int main() {
 
     PAG::Renderer::getInstancia().enable();
     PAG::gui::getInstancia().inicializar(window);
-    if (!PAG::Renderer::getInstancia().creaShaderProgram("pag03", error)) {
 
-        PAG::gui::getInstancia().addMensaje(error);
-    } else {
-        PAG::gui::getInstancia().addMensaje("Shader Program creado y enlazado con éxito.");
-    }
-
-    PAG::Renderer::getInstancia().creaModelo();
 
     // - Ciclo de eventos de la aplicación. La condición de parada es que la
 

@@ -6,48 +6,48 @@
 #define P1_SHADERPROGRAM_H
 #include "string"
 
+namespace PAG {
+    class ShaderProgram {
+    private:
+        ShaderProgram();
+        ~ShaderProgram();
+        static ShaderProgram *instancia;
+        GLuint idVS = 0; // Identificador del vertex shader
+        GLuint idFS = 0; // Identificador del fragment shader
+        GLuint idSP = 0; // Identificador del shader program
+        GLuint idVAO = 0; // Identificador del vertex array object
+        GLuint idVBO = 0; // Identificador del vertex buffer object
+        GLuint idIBO = 0; // Identificador del index buffer object
+    public:
+        GLuint get_id_vs() const {
+            return idVS;
+        }
 
-class ShaderProgram {
-private:
-    ShaderProgram();
-    ~ShaderProgram();
-    ShaderProgram *instancia;
-    GLuint idVS = 0; // Identificador del vertex shader
-    GLuint idFS = 0; // Identificador del fragment shader
-    GLuint idSP = 0; // Identificador del shader program
-    GLuint idVAO = 0; // Identificador del vertex array object
-    GLuint idVBO = 0; // Identificador del vertex buffer object
-    GLuint idIBO = 0; // Identificador del index buffer object
-public:
-    GLuint get_id_vs() const {
-        return idVS;
-    }
+        GLuint get_id_fs() const {
+            return idFS;
+        }
 
-    GLuint get_id_fs() const {
-        return idFS;
-    }
+        GLuint get_id_sp() const {
+            return idSP;
+        }
 
-    GLuint get_id_sp() const {
-        return idSP;
-    }
+        GLuint get_id_vao() const {
+            return idVAO;
+        }
 
-    GLuint get_id_vao() const {
-        return idVAO;
-    }
+        GLuint get_id_vbo() const {
+            return idVBO;
+        }
 
-    GLuint get_id_vbo() const {
-        return idVBO;
-    }
+        GLuint get_id_ibo() const {
+            return idIBO;
+        }
 
-    GLuint get_id_ibo() const {
-        return idIBO;
-    }
-
-    std::string leeArchivoTexto(const std::string& archivo) ;
-    bool creaShaderProgram(std::string prefijo, std::string &error );
-    void creaModelo();
-    ShaderProgram& getInstancia() ;
-};
-
+        std::string leeArchivoTexto(const std::string& archivo) ;
+        bool creaShaderProgram(std::string prefijo, std::string &error );
+        void creaModelo();
+        static ShaderProgram& getInstancia() ;
+    };
+}
 
 #endif //P1_SHADERPROGRAM_H

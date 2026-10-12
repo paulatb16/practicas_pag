@@ -11,6 +11,7 @@ namespace PAG {
         static gui* instancia;
         gui();
         std::vector<std::string> mensajes; // para almacenar los mensajes que se van a sacar en la ventana de mensajes
+        char nombreShader[128] = "";
 
     public:
         virtual ~gui();

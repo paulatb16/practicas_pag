@@ -1,8 +1,10 @@
 #include "gui.h"
 #include "Renderer.h"
+#include "ShaderProgram.h"
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+
 
 namespace PAG {
     gui* gui::instancia = nullptr;
@@ -65,6 +67,27 @@ namespace PAG {
         }
     }
     ImGui::End();
+
+        ImGui::SetNextWindowPos(ImVec2(10, 200), ImGuiCond_Once);
+        if (ImGui::Begin("Shader Program")) {
+            ImGui::InputText("##", nombreShader, sizeof(nombreShader), ImGuiInputTextFlags_AutoSelectAll);
+
+            if (ImGui::Button("Load")) {
+                std::string error = "";
+                std::string nombreStr(nombreShader);
+
+                bool exito = ShaderProgram::getInstancia().creaShaderProgram(nombreStr, error);
+
+                if (exito) {
+                    addMensaje("ÉXITO: Shaders '" + nombreStr + "' compilados y enlazados.");
+                    ShaderProgram::getInstancia().creaModelo();
+                } else {
+                    addMensaje("ERROR: Fallo al cargar '" + nombreStr + "':\n" + error);
+                }
+            }
+        }
+        ImGui::End();
+
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

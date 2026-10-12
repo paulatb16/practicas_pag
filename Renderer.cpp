@@ -4,9 +4,9 @@
 #include <glad/glad.h>
 #include "Renderer.h"
 #include <GL/gl.h>
-#include <iostream>
+
 #include <fstream>
-#include <sstream>
+
 #include "ShaderProgram.h"
 using namespace std;
 namespace PAG {
@@ -27,10 +27,10 @@ namespace PAG {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 
-        if (!= 0) {
-            glUseProgram(idSP);
-            glBindVertexArray(idVAO);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, idIBO);
+        if (ShaderProgram::getInstancia().get_id_sp()!= 0) {
+            glUseProgram(ShaderProgram::getInstancia().get_id_sp());
+            glBindVertexArray(ShaderProgram::getInstancia().get_id_vao());
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ShaderProgram::getInstancia().get_id_ibo());
             glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
         }
     }
