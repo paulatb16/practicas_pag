@@ -26,6 +26,8 @@ namespace PAG {
         float aspect;
         static Camara *instancia;
 
+
+
     public:
         Camara();
         ~Camara();
@@ -34,14 +36,17 @@ namespace PAG {
         static Camara &getInstancia();
 
         void setAspect(float a) { aspect = a; }
+        float getFov() const { return fov; }
 
 
         void aplicarZoom(float delta);
         void aplicarPan(float angulo);
         void aplicarTilt(float angulo);
-        void aplicarDolly(float desplazamiento);
+        void aplicarDolly(float despFrente, float despLateral);
         void aplicarCrane(float desplazamiento);
         void aplicarOrbit(float deltaLat, float deltaLon);
+
+
 
 
 

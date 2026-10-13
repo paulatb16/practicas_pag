@@ -55,10 +55,13 @@ namespace PAG {
         lookAt = pos + glm::vec3(nuevaDir);
     }
 
-    void Camara::aplicarDolly(float desplazamiento) {
+    void Camara::aplicarDolly(float despFrente, float despLateral) {
         glm::vec3 direccion = glm::normalize(lookAt - pos);
-        pos += direccion * desplazamiento;
-        lookAt += direccion * desplazamiento;
+
+        glm::vec3 u = glm::normalize(glm::cross(direccion, up));
+
+        pos += (direccion * despFrente) + (u * despLateral);
+        lookAt += (direccion * despFrente) + (u * despLateral);
     }
 
     void Camara::aplicarCrane(float desplazamiento) {

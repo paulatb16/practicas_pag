@@ -54,10 +54,23 @@ En esta práctica se han realizado diversos cambios con respecto a la anterior.
 
 ## PRACTICAS 4 Y 5
 
-En estas dos prácticas he hecho los movimientos de cámara. 
+En estas dos prácticas se ha realizado principalmente el movimiento de la cámara. Para empezar quiero explicar las reglas de uso de mi programa:
+
+1. Cargar el shader program y darle a load (en este caso se llama pag03) para cargar el objeto
+2. Si se quiere utilizar la camara tanto con los botones como con el raton, se tiene que clickar la casilla de activar la camara, sino no se podrá utilizar
+3. Para cada movimiento de cámara, se elige en la lista que hay y se puede llevar a cabo tanto con los botones como con el ratón.
 
 - Lo primero que he hecho ha sido crear la clase ShaderProgram y desacoplar todo lo hecho en la práctica anterior. Además he creado una nueva ventana para que se escriba el nombre del ShaderProgram y este se cree, por tanto ya no se crea solo sino que debes subirlo primero. 
 
 - Después he creado la clase camara. He añadido los parámetros necesarios para esta clase, como la direccion a la que mira la camara, la relación de aspecto... Y los métodos para obtener las matrices de vista y proyeccion. También he añadido el uniform mat4 u_matrizMVP a mi archivo del vertex shader. Todo esto lo uso en el archivo refrescar de la clase Renderer.
 
-- A continuación he hecho la parte de los movimientos. He creado una función para el cambio de cada uno de los movimeitnos en la clase camara. Después he creado la ventana con los botones, donde puedes elegir el movimiento para hacer, y cada cual tiene botones o barras para que hagas los movimientos que quieras. En cada caso se van llamando a la sfunciones del cambio de los movimientos de la camara que hemos mencionado al principio.
+- A continuación he hecho la parte de los movimientos. He creado una función para el cambio de cada uno de los movimientos en la clase camara. Después he creado la ventana, en la que primero aparece un check para activar la camara, y solo si se selecciona aparecerán las funcionalidades de cámara, donde puedes elegir el movimiento para hacer, y cada cual tiene botones o barras para que los hagas al nivel que quieras. Cuando se elige un movimiento de cámara los demás quedan bloqueados, es decir solo se puede hacer uno a la vez.
+
+- Por último he implementado los movimientos de camara con el ratón. PAra ello he creado un nuevo callback, que mira si esta el click pulsado o no, y según el movimiento que esté seleccionado y hacia donde muevas el ratón hará una cosa u otra. Por ejemplo en el zoom, si mueves el ratón hacia arriba hace zoom y hacia abajo se aleja, pero hacia los lados por ejemplo no funciona ya que no le añadimos el movimiento en X del ratón, solo modificamos con respecto al movimiento de Y. Aparte he añadido un parámetro de sensibilidad para los cambios de posicion de la X y la Y ya que sino hacía un cambio muy brusco y no queremos eso. 
+
+
+Aquí muestro un diagrama UML que va enseñando como quedan actualmente las clases y las API utilizadas
+
+![alt text](diagramas/diagrama-p5.png)
+
+

@@ -14,6 +14,7 @@ namespace PAG {
         std::vector<std::string> mensajes; // para almacenar los mensajes que se van a sacar en la ventana de mensajes
         char nombreShader[128] = "";
         TipoMovimientoCamara movimientoActual = TipoMovimientoCamara::ZOOM;
+        bool camaraActiva = false;
 
     public:
         virtual ~gui();
@@ -29,6 +30,7 @@ namespace PAG {
         bool capturaTeclado();
         void addMensaje(const std::string& texto);
         TipoMovimientoCamara getMovimientoActual() const { return movimientoActual; }
+        bool isCamaraActiva() const { return camaraActiva; }
     };
 
 }

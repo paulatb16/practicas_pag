@@ -10,6 +10,10 @@
 #include "gui.h"
 
 float r = 0.6, g = 0.6, b = 0.6;
+bool botonIzquierdoPulsado = false;
+double ultimox = 0.0;
+double ultimoy = 0.0;
+bool primerClick = true;
 
 // - Esta función callback será llamada cuando GLFW produzca algún error
 
@@ -73,14 +77,19 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 // del ratón sobre el área de dibujo OpenGL.
 
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods) {
-
     if (PAG::gui::getInstancia().capturaRaton()) {
         return;
     }
-    if (action == GLFW_PRESS) {
-        PAG::gui::getInstancia().addMensaje("haciendo click");
-    } else if (action == GLFW_RELEASE) {
-        PAG::gui::getInstancia().addMensaje("soltando click");
+
+    if (button == GLFW_MOUSE_BUTTON_LEFT) {
+        if (action == GLFW_PRESS) {
+            botonIzquierdoPulsado = true;
+            primerClick = true; // esto se hace para registrar el click para el callback de despues
+            PAG::gui::getInstancia().addMensaje("haciendo click");
+        } else if (action == GLFW_RELEASE) {
+            botonIzquierdoPulsado = false;
+            PAG::gui::getInstancia().addMensaje("soltando click");
+        }
     }
 }
 
@@ -151,6 +160,60 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
     }
 
     PAG::Renderer::getInstancia().ClearColor(r, g, b, 1.0f);
+}
+
+
+
+void cursor_position_callback(GLFWwindow* window, double xpos, double ypos) {
+    if (PAG::gui::getInstancia().capturaRaton()) return;
+
+    if (!PAG::gui::getInstancia().isCamaraActiva()) {
+        primerClick = true;
+        return;
+    } //para que no se use el movimiento de raton si la casilla de camara no esta activada
+
+    if (botonIzquierdoPulsado) {
+        if (primerClick) {
+            ultimox = xpos;
+            ultimoy = ypos;
+            primerClick = false;
+        }
+
+        double deltaX = xpos - ultimox;
+        double deltaY = ypos - ultimoy;
+
+        ultimox = xpos;
+        ultimoy = ypos;
+
+
+        float sensibilidad = 0.005f; //ajustamso la sensibilidad porque sino va muy brusco
+        float xOffset = static_cast<float>(deltaX) * sensibilidad;
+        float yOffset = static_cast<float>(deltaY) * sensibilidad;
+
+        auto movActual = PAG::gui::getInstancia().getMovimientoActual();
+
+        switch (movActual) {
+            case PAG::TipoMovimientoCamara::ZOOM:
+
+                PAG::Camara::getInstancia().aplicarZoom(PAG::Camara::getInstancia().getFov() + yOffset);
+                break;
+            case PAG::TipoMovimientoCamara::PAN:
+                PAG::Camara::getInstancia().aplicarPan(-xOffset);
+                break;
+            case PAG::TipoMovimientoCamara::TILT:
+                PAG::Camara::getInstancia().aplicarTilt(-yOffset);
+                break;
+            case PAG::TipoMovimientoCamara::DOLLY:
+                PAG::Camara::getInstancia().aplicarDolly(-yOffset, xOffset);
+                break;
+            case PAG::TipoMovimientoCamara::CRANE:
+                PAG::Camara::getInstancia().aplicarCrane(yOffset);
+                break;
+            case PAG::TipoMovimientoCamara::ORBIT:
+                PAG::Camara::getInstancia().aplicarOrbit(-yOffset, -xOffset);
+                break;
+        }
+    }
 }
 
 
@@ -241,6 +304,7 @@ int main() {
     glfwSetMouseButtonCallback(window, mouse_button_callback);
 
     glfwSetScrollCallback(window, scroll_callback);
+    glfwSetCursorPosCallback(window, cursor_position_callback);
 
 
     // - Le decimos a OpenGL que tenga en cuenta la profundidad a la hora de
