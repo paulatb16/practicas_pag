@@ -1,24 +1,20 @@
-//
-// Created by pauli on 21/09/2026.
-//
 #include <glad/glad.h>
 #include "Renderer.h"
 #include <GL/gl.h>
-
 #include <fstream>
-
+#include "Camara.h"
 #include "ShaderProgram.h"
+
 using namespace std;
 namespace PAG {
     Renderer* Renderer::instancia = nullptr;
     Renderer::Renderer ()=default;
     Renderer::~Renderer()=default;
-    
 
-    PAG::Renderer& PAG::Renderer::getInstancia ()
-    { if ( !instancia )
-    { instancia = new Renderer ();
-    }
+    Renderer& Renderer::getInstancia () {
+        if (!instancia) {
+            instancia = new Renderer ();
+        }
         return *instancia;
     }
 
@@ -26,9 +22,19 @@ namespace PAG {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+        glm::mat4 matrizVista = Camara::getInstancia().getViewMatrix();
+        glm::mat4 matrizProyeccion = Camara::getInstancia().getProjectionMatrix();
+        glm::mat4 matrizMVP = matrizProyeccion * matrizVista;
 
         if (ShaderProgram::getInstancia().get_id_sp()!= 0) {
-            glUseProgram(ShaderProgram::getInstancia().get_id_sp());
+            GLuint idSP = ShaderProgram::getInstancia().get_id_sp();
+            glUseProgram(idSP);
+
+            GLint matrizLoc = glGetUniformLocation(idSP, "u_matrizMVP");
+            if (matrizLoc != -1) {
+                glUniformMatrix4fv(matrizLoc, 1, GL_FALSE, &matrizMVP[0][0]);
+            }
+
             glBindVertexArray(ShaderProgram::getInstancia().get_id_vao());
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ShaderProgram::getInstancia().get_id_ibo());
             glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
@@ -37,8 +43,10 @@ namespace PAG {
 
     void Renderer::viewport(int x, int y, int width, int height) {
         glViewport(x, y, width, height);
+        if (height > 0) {
+            Camara::getInstancia().setAspect(static_cast<float>(width) / static_cast<float>(height));
+        }
     }
-
 
     std::string Renderer::getRendererInfo() {
         return reinterpret_cast<const char*>(glGetString(GL_RENDERER));
@@ -53,7 +61,6 @@ namespace PAG {
         return reinterpret_cast<const char*>(glGetString(GL_SHADING_LANGUAGE_VERSION));
     }
 
-
     void Renderer::enable() {
         glEnable(GL_DEPTH_TEST);
     }
@@ -62,20 +69,9 @@ namespace PAG {
         glClearColor(r, g, b, a);
     }
 
-
-
-
-/**
-* Método para inicializar los parámetros globales de OpenGL
-*/
-void Renderer::inicializaOpenGL()
-{
-    glClearColor(_colorBorrado[0], _colorBorrado[1], _colorBorrado[2], _colorBorrado[3]);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_MULTISAMPLE);
-}
-
-
-
-
+    void Renderer::inicializaOpenGL() {
+        glClearColor(_colorBorrado[0], _colorBorrado[1], _colorBorrado[2], _colorBorrado[3]);
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_MULTISAMPLE);
+    }
 }

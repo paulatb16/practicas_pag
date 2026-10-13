@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <string>
+#include "Camara.h"
 namespace PAG {
 
     class gui {
@@ -12,6 +13,7 @@ namespace PAG {
         gui();
         std::vector<std::string> mensajes; // para almacenar los mensajes que se van a sacar en la ventana de mensajes
         char nombreShader[128] = "";
+        TipoMovimientoCamara movimientoActual = TipoMovimientoCamara::ZOOM;
 
     public:
         virtual ~gui();
@@ -26,6 +28,7 @@ namespace PAG {
         bool capturaRaton();
         bool capturaTeclado();
         void addMensaje(const std::string& texto);
+        TipoMovimientoCamara getMovimientoActual() const { return movimientoActual; }
     };
 
 }

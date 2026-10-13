@@ -8,6 +8,7 @@ file( GLOB GLAD_FILES GLAD/src/*.c ) # Código fuente de GLAD
 file( GLOB IMGUI_FILES imgui/src/*.cpp ) #imgui
 
 
+
 add_executable( ${PROJECT_NAME} ${MY_FILES}
         ${GLAD_FILES}
         Renderer.cpp
@@ -16,10 +17,15 @@ add_executable( ${PROJECT_NAME} ${MY_FILES}
         gui.cpp
         gui.h
         ShaderProgram.cpp
-        ShaderProgram.h)
+        ShaderProgram.h
+        Camara.cpp
+        Camara.h)
 target_include_directories( ${PROJECT_NAME} PUBLIC GLAD/include  imgui/include)
 
 find_package(glfw3 CONFIG REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
+find_package(glm CONFIG REQUIRED)
+target_link_libraries(${PROJECT_NAME} PRIVATE glm::glm)
+
 
 

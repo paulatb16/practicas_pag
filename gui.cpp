@@ -88,6 +88,50 @@ namespace PAG {
         }
         ImGui::End();
 
+        ImGui::SetNextWindowPos(ImVec2(350, 250), ImGuiCond_Once);
+        if (ImGui::Begin("Camera")) {
+            const char* items[] = { "Zoom", "Pan", "Tilt", "Dolly", "Crane", "Orbit" };
+            int current_item = static_cast<int>(movimientoActual);
+
+            if (ImGui::Combo("Movimiento", &current_item, items, IM_ARRAYSIZE(items))) {
+                movimientoActual = static_cast<TipoMovimientoCamara>(current_item);
+            }
+            if (movimientoActual == TipoMovimientoCamara::ZOOM) {
+                static float anguloZoom = 45.0f;
+                if (ImGui::SliderFloat("Angle", &anguloZoom, 1.0f, 179.0f)) {
+                    Camara::getInstancia().aplicarZoom(glm::radians(anguloZoom));
+                }
+
+            } else if (movimientoActual == TipoMovimientoCamara::PAN) {
+                if (ImGui::Button("izq")) { Camara::getInstancia().aplicarPan(0.05f); }
+                ImGui::SameLine();
+                if (ImGui::Button("derecho")) { Camara::getInstancia().aplicarPan(-0.05f); }
+            } else if (movimientoActual == TipoMovimientoCamara::TILT) {
+                if (ImGui::Button("arriba")) { Camara::getInstancia().aplicarTilt(0.05f); }
+                ImGui::SameLine();
+                if (ImGui::Button("abajo")) { Camara::getInstancia().aplicarTilt(-0.05f); }
+            } else if (movimientoActual == TipoMovimientoCamara::DOLLY) {
+                if (ImGui::Button("atrás")) { Camara::getInstancia().aplicarDolly(0.1f); }
+                if (ImGui::Button("izq")) {  }
+                ImGui::SameLine();
+                if (ImGui::Button("derecha")) { }
+                if (ImGui::Button("frente")) { Camara::getInstancia().aplicarDolly(-0.1f); }
+            } else if (movimientoActual == TipoMovimientoCamara::CRANE) {
+                if (ImGui::Button("arriba")) { Camara::getInstancia().aplicarCrane(0.1f); }
+                if (ImGui::Button("abajo")) { Camara::getInstancia().aplicarCrane(-0.1f); }
+            } else if (movimientoActual == TipoMovimientoCamara::ORBIT) {
+                ImGui::Text("Latitud");
+                if (ImGui::Button("norte")) { Camara::getInstancia().aplicarOrbit(0.05f, 0.0f); }
+                ImGui::SameLine();
+                if (ImGui::Button("sur")) { Camara::getInstancia().aplicarOrbit(-0.05f, 0.0f); }
+                ImGui::Text("Longitud");
+                if (ImGui::Button("oeste")) { Camara::getInstancia().aplicarOrbit(0.0f, 0.05f); }
+                ImGui::SameLine();
+                if (ImGui::Button("este")) { Camara::getInstancia().aplicarOrbit(0.0f, -0.05f); }
+            }
+        }
+        ImGui::End();
+
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
