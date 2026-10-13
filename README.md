@@ -52,4 +52,12 @@ En esta práctica se han realizado diversos cambios con respecto a la anterior.
 
 
 
+## PRACTICAS 4 Y 5
 
+En estas dos prácticas he hecho los movimientos de cámara. 
+
+- Lo primero que he hecho ha sido crear la clase ShaderProgram y desacoplar todo lo hecho en la práctica anterior. Además he creado una nueva ventana para que se escriba el nombre del ShaderProgram y este se cree, por tanto ya no se crea solo sino que debes subirlo primero. 
+
+- Después he creado la clase camara. He añadido los parámetros necesarios para esta clase, como la direccion a la que mira la camara, la relación de aspecto... Y los métodos para obtener las matrices de vista y proyeccion. También he añadido el uniform mat4 u_matrizMVP a mi archivo del vertex shader. Todo esto lo uso en el archivo refrescar de la clase Renderer.
+
+- A continuación he hecho la parte de los movimientos. He creado una función para el cambio de cada uno de los movimeitnos en la clase camara. Después he creado la ventana con los botones, donde puedes elegir el movimiento para hacer, y cada cual tiene botones o barras para que hagas los movimientos que quieras. En cada caso se van llamando a la sfunciones del cambio de los movimientos de la camara que hemos mencionado al principio.
