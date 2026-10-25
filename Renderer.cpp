@@ -8,12 +8,17 @@
 using namespace std;
 namespace PAG {
     Renderer* Renderer::instancia = nullptr;
-    Renderer::Renderer ()=default;
-    Renderer::~Renderer()=default;
+    Renderer::Renderer() = default;
+    Renderer::~Renderer() {
+        for (Model* modelo : _modelos) {
+            delete modelo;
+        }
+        _modelos.clear();
+    }
 
-    Renderer& Renderer::getInstancia () {
+    Renderer& Renderer::getInstancia() {
         if (!instancia) {
-            instancia = new Renderer ();
+            instancia = new Renderer();
         }
         return *instancia;
     }
@@ -21,24 +26,15 @@ namespace PAG {
     void Renderer::refrescar() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-        glm::mat4 matrizVista = Camara::getInstancia().getViewMatrix();
+        glm::mat4 matrizVista = Camara::getInstancia().getViewMatrix(); //matrices
         glm::mat4 matrizProyeccion = Camara::getInstancia().getProjectionMatrix();
-        glm::mat4 matrizMVP = matrizProyeccion * matrizVista;
-
-        if (ShaderProgram::getInstancia().get_id_sp()!= 0) {
-            GLuint idSP = ShaderProgram::getInstancia().get_id_sp();
-            glUseProgram(idSP);
-
-            GLint matrizLoc = glGetUniformLocation(idSP, "u_matrizMVP");
-            if (matrizLoc != -1) {
-                glUniformMatrix4fv(matrizLoc, 1, GL_FALSE, &matrizMVP[0][0]);
+        ShaderProgram& shader = ShaderProgram::getInstancia(); //shader program
+        if (shader.get_id_sp() != 0) {
+            for (Model* modelo : _modelos) {
+                modelo->render(shader, matrizVista, matrizProyeccion); //dibujamos los modelos de la lista
             }
-
-            glBindVertexArray(ShaderProgram::getInstancia().get_id_vao());
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ShaderProgram::getInstancia().get_id_ibo());
-            glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
         }
+
     }
 
     void Renderer::viewport(int x, int y, int width, int height) {

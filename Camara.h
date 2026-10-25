@@ -25,12 +25,12 @@ namespace PAG {
         float zfar;
         float aspect;
         static Camara *instancia;
-
+        Camara();
+        ~Camara();
 
 
     public:
-        Camara();
-        ~Camara();
+
        glm::mat4 getViewMatrix();
         glm::mat4 getProjectionMatrix();
         static Camara &getInstancia();

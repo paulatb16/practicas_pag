@@ -1,9 +1,11 @@
 #ifndef imgui_h
 #define imgui_h
-
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <string>
+#include "imgui.h"
+#include <imfilebrowser.h>
 #include "Camara.h"
 namespace PAG {
 
@@ -15,6 +17,7 @@ namespace PAG {
         char nombreShader[128] = "";
         TipoMovimientoCamara movimientoActual = TipoMovimientoCamara::ZOOM;
         bool camaraActiva = false;
+        ImGui::FileBrowser fileDialog;
 
     public:
         virtual ~gui();

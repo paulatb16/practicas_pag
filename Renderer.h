@@ -6,6 +6,7 @@
 #define P1_RENDERER_H
 #include <GL/gl.h>
 #include "string"
+#include "model.h"
 
 namespace PAG {
     class Renderer {
@@ -14,6 +15,7 @@ namespace PAG {
         Renderer();
         ~Renderer();
         GLfloat _colorBorrado[4] = { 0.6f, 0.6f, 0.6f, 1.0f };
+        std::vector<Model*> _modelos;
 
     public:
         static Renderer& getInstancia();
@@ -26,6 +28,14 @@ namespace PAG {
         void enable();
         void ClearColor(float r, float g, float b, float a);
         void inicializaOpenGL();
+        //para añadir modelos
+        void addModelo(Model* modelo) {
+            _modelos.push_back(modelo);
+        }
+        //paara la lista de modelos en el gui
+        std::vector<Model*>& getModelos() {
+            return _modelos;
+        }
 
     };
 } // PAG

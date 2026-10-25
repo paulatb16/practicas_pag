@@ -1,10 +1,10 @@
+#include <glad/glad.h>
 #include "gui.h"
 #include "Renderer.h"
 #include "ShaderProgram.h"
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-
 
 namespace PAG {
     gui* gui::instancia = nullptr;
@@ -18,23 +18,24 @@ namespace PAG {
         }
         return *instancia;
     }
-    //INICIALIZO
+
     void gui::inicializar(GLFWwindow* window) {
-        // Inicialización básica de ImGui
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();
         io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init("#version 430");
+        fileDialog.SetTitle("Seleccionar modelo 3D"); // Título de la ventanita
+        fileDialog.SetTypeFilters({ ".obj", ".OBJ" });
     }
 
-    //DIBUJO VENTANAS
     void gui::render() {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_Once); //ventana de los mensajes
+
+        ImGui::SetNextWindowPos(ImVec2(10, 10), ImGuiCond_Once);
         if (ImGui::Begin("Mensajes")) {
             ImGui::Text("%s", Renderer::getInstancia().getRendererInfo().c_str());
             ImGui::Text("%s", Renderer::getInstancia().getVendorInfo().c_str());
@@ -46,27 +47,22 @@ namespace PAG {
                 ImGui::TextUnformatted(msg.c_str());
             }
 
-            //esto sirve para que se vaya viendo siempre el mensaje mas reciente
             if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY()) {
                 ImGui::SetScrollHereY(1.0f);
             }
             ImGui::EndChild();
         }
-
         ImGui::End();
 
-
-
-    ImGui::SetNextWindowPos(ImVec2(350, 10), ImGuiCond_Once); //ventana del color picker
-    if (ImGui::Begin("Fondo")) {
-        static float color[4] = { 0.6f, 0.6f, 0.6f,0.6f};
-        ImGuiColorEditFlags flags = ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_AlphaBar; //esto es para que sea la rueda en vez del cuadrado y para que aparezca la barra de alpha
-        if (ImGui::ColorPicker4("Color para el fondo", color,flags)) {
-
-            Renderer::getInstancia().ClearColor(color[0], color[1], color[2], color[3]);
+        ImGui::SetNextWindowPos(ImVec2(350, 10), ImGuiCond_Once);
+        if (ImGui::Begin("Fondo")) {
+            static float color[4] = { 0.6f, 0.6f, 0.6f, 0.6f };
+            ImGuiColorEditFlags flags = ImGuiColorEditFlags_PickerHueWheel | ImGuiColorEditFlags_AlphaBar;
+            if (ImGui::ColorPicker4("Color para el fondo", color, flags)) {
+                Renderer::getInstancia().ClearColor(color[0], color[1], color[2], color[3]);
+            }
         }
-    }
-    ImGui::End();
+        ImGui::End();
 
         ImGui::SetNextWindowPos(ImVec2(10, 200), ImGuiCond_Once);
         if (ImGui::Begin("Shader Program")) {
@@ -80,7 +76,6 @@ namespace PAG {
 
                 if (exito) {
                     addMensaje("ÉXITO: Shaders '" + nombreStr + "' compilados y enlazados.");
-                    ShaderProgram::getInstancia().creaModelo();
                 } else {
                     addMensaje("ERROR: Fallo al cargar '" + nombreStr + "':\n" + error);
                 }
@@ -92,7 +87,6 @@ namespace PAG {
         if (ImGui::Begin("Camera")) {
             ImGui::Checkbox("Activar controles de camara", &camaraActiva);
 
-            // si la camara esta activada ponemos las demas opciones sino no
             if (camaraActiva) {
                 const char* items[] = { "Zoom", "Pan", "Tilt", "Dolly", "Crane", "Orbit" };
                 int current_item = static_cast<int>(movimientoActual);
@@ -106,7 +100,6 @@ namespace PAG {
                     if (ImGui::SliderFloat("Angulo", &anguloZoom, 1.0f, 179.0f)) {
                         Camara::getInstancia().aplicarZoom(glm::radians(anguloZoom));
                     }
-
                 } else if (movimientoActual == TipoMovimientoCamara::PAN) {
                     if (ImGui::Button("izq")) { Camara::getInstancia().aplicarPan(0.05f); }
                     ImGui::SameLine();
@@ -116,11 +109,11 @@ namespace PAG {
                     ImGui::SameLine();
                     if (ImGui::Button("abajo")) { Camara::getInstancia().aplicarTilt(-0.05f); }
                 } else if (movimientoActual == TipoMovimientoCamara::DOLLY) {
-                    if (ImGui::Button("atrás")) { Camara::getInstancia().aplicarDolly(0.1f,0.0); }
-                    if (ImGui::Button("izq")) { Camara::getInstancia().aplicarDolly(0.0f,0.1f); }
+                    if (ImGui::Button("atrás")) { Camara::getInstancia().aplicarDolly(0.1f, 0.0); }
+                    if (ImGui::Button("izq")) { Camara::getInstancia().aplicarDolly(0.0f, 0.1f); }
                     ImGui::SameLine();
-                    if (ImGui::Button("derecha")) { Camara::getInstancia().aplicarDolly(0.0f,-0.1f);}
-                    if (ImGui::Button("frente")) { Camara::getInstancia().aplicarDolly(-0.1f,0.0f); }
+                    if (ImGui::Button("derecha")) { Camara::getInstancia().aplicarDolly(0.0f, -0.1f); }
+                    if (ImGui::Button("frente")) { Camara::getInstancia().aplicarDolly(-0.1f, 0.0f); }
                 } else if (movimientoActual == TipoMovimientoCamara::CRANE) {
                     if (ImGui::Button("arriba")) { Camara::getInstancia().aplicarCrane(0.1f); }
                     if (ImGui::Button("abajo")) { Camara::getInstancia().aplicarCrane(-0.1f); }
@@ -137,31 +130,118 @@ namespace PAG {
             }
         }
         ImGui::End();
+        //ventana para buscar objetos
+        ImGui::SetNextWindowPos(ImVec2(10, 400), ImGuiCond_Once);
+        if (ImGui::Begin("modelos")) {
+
+            if (ImGui::Button("cargar modelo")) {
+                fileDialog.Open();
+            }
+
+            fileDialog.Display();
+
+            if (fileDialog.HasSelected()) {
+
+                std::string ruta = fileDialog.GetSelected().string();
+
+                try {
+                    PAG::Model* nuevoModelo = new PAG::Model(ruta, "Modelo Nuevo");
+                    PAG::Renderer::getInstancia().addModelo(nuevoModelo);
+
+                    addMensaje(" Modelo cargado desde " + ruta);
+                } catch (const std::exception& e) {
+                    addMensaje("ERROR al cargar modelo: " + std::string(e.what()));
+                }
+
+
+                fileDialog.ClearSelected();
+            }
+
+            ImGui::Separator();
+
+            ImGui::Text("Modelos:"); //lista de modelos
+            auto& modelos = PAG::Renderer::getInstancia().getModelos();
+
+            if (modelos.empty()) {
+                ImGui::Text("no hay modelos");
+            } else {
+                for (size_t i = 0; i < modelos.size(); ++i) {
+                    ImGui::BulletText("Modelo %zu", i);
+                }
+            }
+        }
+        ImGui::End();
+
+ImGui::SetNextWindowPos(ImVec2(350, 400), ImGuiCond_Once);
+if (ImGui::Begin("Transformaciones")) {
+
+    auto& modelos = PAG::Renderer::getInstancia().getModelos();
+
+    if (modelos.empty()) {
+        ImGui::Text("Elige un modelo para modificar");
+    } else {
+
+        static int modeloSeleccionado = 0;
+
+
+        if (modeloSeleccionado >= static_cast<int>(modelos.size())) {
+            modeloSeleccionado = static_cast<int>(modelos.size()) - 1;
+        }
+        std::vector<std::string> nombresModelos;
+        std::vector<const char*> itemsCombo;
+        for (size_t i = 0; i < modelos.size(); ++i) {
+            nombresModelos.push_back("Modelo " + std::to_string(i) + ": " + modelos[i]->getName());
+        }
+        for (const auto& nombre : nombresModelos) {
+            itemsCombo.push_back(nombre.c_str());
+        }
+
+
+        ImGui::Combo("Modelo activo", &modeloSeleccionado, itemsCombo.data(), static_cast<int>(itemsCombo.size()));
+
+        ImGui::Separator();
+
+        PAG::Model* modeloActivo = modelos[modeloSeleccionado];
+
+        //trasladar
+        ImGui::Text("Traslacion:");
+        ImGui::DragFloat3("##Pos", &modeloActivo->getPosition().x, 0.05f);
+
+        //rotar
+        ImGui::Text("Rotacion:");
+        ImGui::SliderFloat3("##Rot", &modeloActivo->getRotation().x, -180.0f, 180.0f);
+
+        //escalado
+        ImGui::Text("Escala:");
+        ImGui::DragFloat3("##Esc", &modeloActivo->getScale().x, 0.01f, 0.01f, 10.0f);
+
+        ImGui::Separator();
 
 
 
-    ImGui::Render();
-    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    }
 }
+ImGui::End();
 
-    //FINALIZO
-void gui::finalizar() {
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-}
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    }
 
-//GESTIONO CAPTURA DE EVENTOS EN CALLBACKS
+
+
+    void gui::finalizar() {
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+    }
 
     bool gui::capturaRaton() {
         return ImGui::GetIO().WantCaptureMouse;
     }
     bool gui::capturaTeclado() {
-    return ImGui::GetIO().WantCaptureKeyboard;
-}
-    //funcion para añadir mensajes y sacarlos por pantalla
+        return ImGui::GetIO().WantCaptureKeyboard;
+    }
     void gui::addMensaje(const std::string& texto) {
-    mensajes.push_back(texto);
-}
-
+        mensajes.push_back(texto);
+    }
 }
