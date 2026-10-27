@@ -70,4 +70,12 @@ namespace PAG {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_MULTISAMPLE);
     }
+
+
+    void Renderer::removeModelo(size_t index) {
+        if (index < _modelos.size()) {
+            delete _modelos[index];
+            _modelos.erase(_modelos.begin() + index);
+        }
+    }
 }

@@ -42,6 +42,10 @@ namespace PAG {
         glm::vec3& getPosition() { return _position; }
         glm::vec3& getRotation() { return _rotation; }
         glm::vec3& getScale()    { return _scale; }
+
+        void setPosition(const glm::vec3& pos) { _position = pos; }
+        void setRotation(const glm::vec3& rot) { _rotation = rot; }
+        void setScale(const glm::vec3& scale)  { _scale = scale; }
         const std::string& getName() const { return _name; }
     };
 

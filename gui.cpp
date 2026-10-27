@@ -5,7 +5,7 @@
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
-
+#include <random>
 namespace PAG {
     gui* gui::instancia = nullptr;
 
@@ -130,7 +130,7 @@ namespace PAG {
             }
         }
         ImGui::End();
-        //ventana para buscar objetos
+        //ventana para buscar modelos obj
         ImGui::SetNextWindowPos(ImVec2(10, 400), ImGuiCond_Once);
         if (ImGui::Begin("modelos")) {
 
@@ -141,11 +141,17 @@ namespace PAG {
             fileDialog.Display();
 
             if (fileDialog.HasSelected()) {
+                static std::mt19937 gen(std::random_device{}());
+                std::uniform_real_distribution<float> dist(-1.5f, 1.5f);
 
                 std::string ruta = fileDialog.GetSelected().string();
 
                 try {
-                    PAG::Model* nuevoModelo = new PAG::Model(ruta, "Modelo Nuevo");
+                    PAG::Model* nuevoModelo = new PAG::Model(ruta, "modelo");
+                    float posX = dist(gen);
+                    float posZ = dist(gen);
+
+                    nuevoModelo->setPosition(glm::vec3(posX, 0.0f, posZ));
                     PAG::Renderer::getInstancia().addModelo(nuevoModelo);
 
                     addMensaje(" Modelo cargado desde " + ruta);
@@ -159,14 +165,27 @@ namespace PAG {
 
             ImGui::Separator();
 
-            ImGui::Text("Modelos:"); //lista de modelos
+            ImGui::Text("Modelos:");
             auto& modelos = PAG::Renderer::getInstancia().getModelos();
 
             if (modelos.empty()) {
                 ImGui::Text("no hay modelos");
             } else {
                 for (size_t i = 0; i < modelos.size(); ++i) {
-                    ImGui::BulletText("Modelo %zu", i);
+
+                        ImGui::PushID(static_cast<int>(i));
+
+                        ImGui::BulletText("Modelo %zu: %s", i, modelos[i]->getName().c_str());
+                        ImGui::SameLine();
+
+                        if (ImGui::Button("Eliminar")) {
+                            PAG::Renderer::getInstancia().removeModelo(i);
+                            ImGui::PopID();
+                            break;
+                        }
+
+                        ImGui::PopID();
+
                 }
             }
         }
@@ -178,7 +197,7 @@ if (ImGui::Begin("Transformaciones")) {
     auto& modelos = PAG::Renderer::getInstancia().getModelos();
 
     if (modelos.empty()) {
-        ImGui::Text("Elige un modelo para modificar");
+        ImGui::Text("elige un modelo para modificar");
     } else {
 
         static int modeloSeleccionado = 0;

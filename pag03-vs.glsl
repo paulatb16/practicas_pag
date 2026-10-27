@@ -11,6 +11,6 @@ out vec3 vNormal;
 
 void main() {
     vNormal = mat3(transpose(inverse(u_matrizModel))) * normal;
-    
+
     gl_Position = u_matrizProjection * u_matrizView * u_matrizModel * vec4(posicion, 1.0);
 }

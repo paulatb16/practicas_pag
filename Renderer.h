@@ -36,6 +36,8 @@ namespace PAG {
         std::vector<Model*>& getModelos() {
             return _modelos;
         }
+        
+        void removeModelo(size_t index);
 
     };
 } // PAG

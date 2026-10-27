@@ -74,3 +74,39 @@ Aquí muestro un diagrama UML que va enseñando como quedan actualmente las clas
 ![alt text](diagramas/diagrama-p5.png)
 
 
+## PRACTICA 6
+
+En esta práctica he añadido la gestion de modelos a la interfaz.
+
+Antes de explicar las decisiones que he tomado, voy a explicar como se usa la aplicación.
+
+1. Se escribe en la pestaña del shader program el shader program que vamos a usar, en este caso pag03
+2. Se carga el modelo en la pestaña de modelos, debe ser obj o sino no aparecerá para seleccionarlo. 
+3. se realizan las tranformaciones del modelo, seleccionando el numero de modelo y aplicandolas en la pestaña de transformaciones
+
+
+He agregado una carpeta con dos modelos, uno de los que había en la práctica, y uno hecho por mí, para comprobar que funciona con cualquier tipo de modelo.
+
+#### Clase modelo
+Lo primero que he hecho ha sido crear la clase modelo. A esta clase le he añadido una funcion loadobject que será la que cargue los obj. En este caso he decidido que no aparezcan los otros archivos con distintas extensiones a obj, igualmente si se quisiera otro tipo de extensión de modelo habría que añadirlo en la parte del codigo del gui, donde creamos la pestaña de crear modelo, añadiendo la extensión que queramos. 
+
+
+#### Clase renderer
+
+En la clase renderer he borrado toda la parte que dibujaba el triangulo de las practicas anteriores, y en su lugar he añadido un vector con los modelos.
+ También he añadido las funciones que se usarán después en la clase gui, para añadir los modelos que se vayan cargando a la interfaz y al vector de modelos que hemos creado, y para poder eliminarlos tanto de la interfaz como del vector
+
+#### Vertex shader y fragment shader
+
+En el vertex shader he añadido un nuevo location para que se pasen las normales, he pasado las matrices de vision, modelado y proyeccion por separado, y he tranfromado las normales a coordenadas de mundo, haciendo la traspuesta de la inversa.
+En el fragment shader normalizo las normales, a parte de darle colores a las normales, para que así se visualicen, ya que no tenemos aún los métodos para la iluminación
+
+
+#### CLase gui
+
+ En la clase gui, lo que he hecho ha sido crear dos nuevas ventanas. 
+ La primera es para cargar el modelo. Para que se pueda acceder a nuestro gestor de archivos, he usado imfilebrowser. Aparte en esta ventana cuando cargas un modelo, al lado te saldrá un botón para eliminarlo si quieres, que accederá al metodo de la clase renderer mencionado antes. Además, cuando creamos los modelos, se van creando en posiciones aleatorias, asignandole un numero aleatorio entre -1.5 y 1.5 a la posicion X y Z antes de añadirlo al vector y mostrarlo.
+La otra ventana que he creado es para realizarle las tranformaciones al objeto que seleccionemos en un desplegable, pudiendo hacer rotacion traslacion y escalado en cualquiera de los ejes. 
+
+
+

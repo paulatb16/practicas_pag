@@ -18,14 +18,11 @@ Model::~Model() {
 }
 
 
-//esta funcion me permite cargar el objeto con assimp
+
 void Model::loadOBJ(const std::string& filePath) {
     Assimp::Importer importer;
 
-    // Le pedimos a Assimp que lea el archivo y procese la geometría:
-    // - Unir vértices duplicados
-    // - Convertir polígonos a triángulos
-    // - Generar normales suaves si el archivo no las tiene
+
     const aiScene* scene = importer.ReadFile(
         filePath,
         aiProcess_JoinIdenticalVertices |
@@ -47,12 +44,12 @@ void Model::loadOBJ(const std::string& filePath) {
 
       
         for (unsigned int i = 0; i < mesh->mNumVertices; ++i) {
-            // Posición (X, Y, Z)
+
             interleavedVertices.push_back(mesh->mVertices[i].x);
             interleavedVertices.push_back(mesh->mVertices[i].y);
             interleavedVertices.push_back(mesh->mVertices[i].z);
 
-            // Normal (NX, NY, NZ)
+
             if (mesh->HasNormals()) {
                 interleavedVertices.push_back(mesh->mNormals[i].x);
                 interleavedVertices.push_back(mesh->mNormals[i].y);
@@ -64,7 +61,7 @@ void Model::loadOBJ(const std::string& filePath) {
             }
         }
 
-        // Extraer caras (triángulos)
+
         for (unsigned int f = 0; f < mesh->mNumFaces; ++f) {
             aiFace face = mesh->mFaces[f];
             for (unsigned int j = 0; j < face.mNumIndices; ++j) {
@@ -77,11 +74,11 @@ void Model::loadOBJ(const std::string& filePath) {
 
     _indexCount = static_cast<GLsizei>(indices.size());
     
-    // Guardamos todo en la GPU
+
     setupBuffers(interleavedVertices, indices);
 }
 
-// 2. Enviar los datos del modelo a los buffers de la tarjeta gráfica
+
 void Model::setupBuffers(const std::vector<float>& vertices, const std::vector<unsigned int>& indices) {
     glGenVertexArrays(1, &_vao);
     glGenBuffers(1, &_vbo);
@@ -89,28 +86,28 @@ void Model::setupBuffers(const std::vector<float>& vertices, const std::vector<u
 
     glBindVertexArray(_vao);
 
-    // Subir VBO (Vértices + Normales)
+
     glBindBuffer(GL_ARRAY_BUFFER, _vbo);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
-    // Subir IBO (Índices)
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _ibo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
-    GLsizei stride = 6 * sizeof(float); // 3 floats de posición + 3 floats de normal
+    GLsizei stride = 6 * sizeof(float);
 
-    // Atributo 0 = Posición
+
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, stride, (void*)0);
     glEnableVertexAttribArray(0);
 
-    // Atributo 1 = Normal
+
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, stride, (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     glBindVertexArray(0);
 }
 
-// 3. Matriz de Modelado = Traslación * Rotación * Escala
+
 glm::mat4 Model::getModelMatrix() const {
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, _position);
@@ -121,13 +118,13 @@ glm::mat4 Model::getModelMatrix() const {
     return model;
 }
 
-// 4. Dibujar el modelo
+
 void Model::render(ShaderProgram& shader, const glm::mat4& viewMatrix, const glm::mat4& projMatrix) {
     shader.usar();
 
     glm::mat4 modelMatrix = getModelMatrix();
     
-    // Enviamos las matrices al shader
+
     shader.setUniform("u_matrizModel", modelMatrix);
     shader.setUniform("u_matrizView", viewMatrix);
     shader.setUniform("u_matrizProjection", projMatrix);
@@ -137,4 +134,4 @@ void Model::render(ShaderProgram& shader, const glm::mat4& viewMatrix, const glm
     glBindVertexArray(0);
 }
 
-} // namespace PAG
+}
