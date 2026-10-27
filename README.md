@@ -110,3 +110,6 @@ La otra ventana que he creado es para realizarle las tranformaciones al objeto q
 
 
 
+Por último incluyo un diagrama UML de como está el proyecto en la actualidad
+
+![alt text](diagramas/diagrama-p6.png)
