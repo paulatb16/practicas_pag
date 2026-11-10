@@ -234,13 +234,39 @@ if (ImGui::Begin("Transformaciones")) {
         ImGui::Text("Escala:");
         ImGui::DragFloat3("##Esc", &modeloActivo->getScale().x, 0.01f, 0.01f, 10.0f);
 
+        ImGui::Text("Propiedades del Material:");
+
+        glm::vec4 ambiente = modeloActivo->getMaterial().getAmbiente();
+        glm::vec4 difuso = modeloActivo->getMaterial().getDifuso();
+        glm::vec4 especular = modeloActivo->getMaterial().getEspecular();
+        float brillo = modeloActivo->getMaterial().getbrillo();
+
+        if (ImGui::ColorEdit4("Ambiente", &ambiente[0])) {
+            modeloActivo->getMaterial().setAmbiente(ambiente);
+        }
+        if (ImGui::ColorEdit4("Difuso", &difuso[0])) {
+            modeloActivo->getMaterial().setDifuso(difuso);
+        }
+        if (ImGui::ColorEdit4("Especular", &especular[0])) {
+            modeloActivo->getMaterial().setEspecular(especular);
+        }
+        if (ImGui::SliderFloat("Brillo", &brillo, 1.0f, 128.0f)) {
+            modeloActivo->getMaterial().setbrillo(brillo);
+        }
+
         ImGui::Separator();
-
-
-
     }
 }
-ImGui::End();
+        ImGui::End();
+
+        ImGui::SetNextWindowPos(ImVec2(10, 600), ImGuiCond_Once);
+        if (ImGui::Begin("Visualizacion")) {
+            bool modoAlambre = PAG::Renderer::getInstancia().isModoAlambre();
+            if (ImGui::Checkbox("Modo Alambre", &modoAlambre)) {
+                PAG::Renderer::getInstancia().setModoAlambre(modoAlambre);
+            }
+        }
+        ImGui::End();
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

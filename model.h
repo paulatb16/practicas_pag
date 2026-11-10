@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include "ShaderProgram.h"
+#include "Material.h"
 
 namespace PAG {
 
@@ -26,6 +27,7 @@ namespace PAG {
 
 
         void setupBuffers(const std::vector<float>& interleavedVertices, const std::vector<unsigned int>& indices);
+        Material material;
 
     public:
         Model(const std::string& filePath, const std::string& name = "Modelo");
@@ -47,6 +49,9 @@ namespace PAG {
         void setRotation(const glm::vec3& rot) { _rotation = rot; }
         void setScale(const glm::vec3& scale)  { _scale = scale; }
         const std::string& getName() const { return _name; }
+
+        Material& getMaterial() { return material; }
+        void setMaterial(const Material& mat) { material = mat; }
     };
 
 }

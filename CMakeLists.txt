@@ -21,7 +21,9 @@ add_executable( ${PROJECT_NAME} ${MY_FILES}
         Camara.cpp
         Camara.h
         model.cpp
-        model.h)
+        model.h
+        Material.cpp
+        Material.h)
 target_include_directories( ${PROJECT_NAME} PUBLIC GLAD/include  imgui/include)
 
 find_package(glfw3 CONFIG REQUIRED)

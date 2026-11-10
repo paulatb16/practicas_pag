@@ -25,16 +25,24 @@ namespace PAG {
 
     void Renderer::refrescar() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        glm::mat4 matrizVista = Camara::getInstancia().getViewMatrix(); //matrices
+
+        glm::mat4 matrizVista = Camara::getInstancia().getViewMatrix();
         glm::mat4 matrizProyeccion = Camara::getInstancia().getProjectionMatrix();
-        ShaderProgram& shader = ShaderProgram::getInstancia(); //shader program
+        ShaderProgram& shader = ShaderProgram::getInstancia();
+
         if (shader.get_id_sp() != 0) {
+            shader.usar();
+            if (_modoAlambre) {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+                shader.setSubrutina(GL_FRAGMENT_SHADER, "colorAlambre");
+            } else {
+                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                shader.setSubrutina(GL_FRAGMENT_SHADER, "colorSolido");
+            }
             for (Model* modelo : _modelos) {
-                modelo->render(shader, matrizVista, matrizProyeccion); //dibujamos los modelos de la lista
+                modelo->render(shader, matrizVista, matrizProyeccion);
             }
         }
-
     }
 
     void Renderer::viewport(int x, int y, int width, int height) {

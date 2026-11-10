@@ -16,6 +16,7 @@ namespace PAG {
         ~Renderer();
         GLfloat _colorBorrado[4] = { 0.6f, 0.6f, 0.6f, 1.0f };
         std::vector<Model*> _modelos;
+        bool _modoAlambre = false;
 
     public:
         static Renderer& getInstancia();
@@ -38,6 +39,9 @@ namespace PAG {
         }
         
         void removeModelo(size_t index);
+        //getter y setter del modo alambre
+        bool isModoAlambre() const { return _modoAlambre; }
+        void setModoAlambre(bool modo) { _modoAlambre = modo; }
 
     };
 } // PAG
