@@ -17,10 +17,10 @@ namespace PAG {
     public:
 
         Material(
-            const glm::vec4& amb = glm::vec4(0.2f, 0.2f, 0.2f, 1.0f),
-            const glm::vec4& dif = glm::vec4(0.8f, 0.8f, 0.8f, 1.0f),
+            const glm::vec4& amb = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
+            const glm::vec4& dif = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
             const glm::vec4& esp = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f),
-            float brill = 32.0f
+            float brill = 1.0f
         ) : ambiente(amb), difuso(dif), especular(esp), brillo(brill) {}
         ~Material() = default;
         glm::vec4 getAmbiente() const { return ambiente; }

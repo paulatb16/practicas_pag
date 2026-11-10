@@ -191,75 +191,115 @@ namespace PAG {
         }
         ImGui::End();
 
-ImGui::SetNextWindowPos(ImVec2(350, 400), ImGuiCond_Once);
-if (ImGui::Begin("Transformaciones")) {
+ImGui::SetNextWindowPos(ImVec2(10, 600), ImGuiCond_Once);
+        if (ImGui::Begin("Gestor de Materiales")) {
+            if (ImGui::Button("Crear Nuevo Material")) {
+                PAG::Material nuevoMat;
+                _listaMateriales.push_back(nuevoMat);
+            }
 
-    auto& modelos = PAG::Renderer::getInstancia().getModelos();
+            if (!_listaMateriales.empty()) {
+                ImGui::Separator();
 
-    if (modelos.empty()) {
-        ImGui::Text("elige un modelo para modificar");
-    } else {
+                std::vector<std::string> nombresMat;
+                std::vector<const char*> itemsMat;
+                for (size_t i = 0; i < _listaMateriales.size(); ++i) {
+                    nombresMat.push_back("Material " + std::to_string(i));
+                }
+                for (const auto& nombre : nombresMat) {
+                    itemsMat.push_back(nombre.c_str());
+                }
 
-        static int modeloSeleccionado = 0;
+                ImGui::Combo("Material a editar", &_matSeleccionadoEditor, itemsMat.data(), static_cast<int>(itemsMat.size()));
 
+                if (_matSeleccionadoEditor >= _listaMateriales.size()) _matSeleccionadoEditor = 0;
 
-        if (modeloSeleccionado >= static_cast<int>(modelos.size())) {
-            modeloSeleccionado = static_cast<int>(modelos.size()) - 1;
+                PAG::Material& matEditando = _listaMateriales[_matSeleccionadoEditor];
+
+                glm::vec4 ambiente = matEditando.getAmbiente();
+                glm::vec4 difuso = matEditando.getDifuso();
+                glm::vec4 especular = matEditando.getEspecular();
+                float brillo = matEditando.getbrillo();
+
+                if (ImGui::ColorEdit4("Ambiente", &ambiente[0])) matEditando.setAmbiente(ambiente);
+                if (ImGui::ColorEdit4("Difuso", &difuso[0])) matEditando.setDifuso(difuso);
+                if (ImGui::ColorEdit4("Especular", &especular[0])) matEditando.setEspecular(especular);
+                if (ImGui::SliderFloat("Brillo", &brillo, 1.0f, 128.0f)) matEditando.setbrillo(brillo);
+            } else {
+                ImGui::Text("Aun no hay materiales creados.");
+            }
         }
-        std::vector<std::string> nombresModelos;
-        std::vector<const char*> itemsCombo;
-        for (size_t i = 0; i < modelos.size(); ++i) {
-            nombresModelos.push_back("Modelo " + std::to_string(i) + ": " + modelos[i]->getName());
-        }
-        for (const auto& nombre : nombresModelos) {
-            itemsCombo.push_back(nombre.c_str());
-        }
-
-
-        ImGui::Combo("Modelo activo", &modeloSeleccionado, itemsCombo.data(), static_cast<int>(itemsCombo.size()));
-
-        ImGui::Separator();
-
-        PAG::Model* modeloActivo = modelos[modeloSeleccionado];
-
-        //trasladar
-        ImGui::Text("Traslacion:");
-        ImGui::DragFloat3("##Pos", &modeloActivo->getPosition().x, 0.05f);
-
-        //rotar
-        ImGui::Text("Rotacion:");
-        ImGui::SliderFloat3("##Rot", &modeloActivo->getRotation().x, -180.0f, 180.0f);
-
-        //escalado
-        ImGui::Text("Escala:");
-        ImGui::DragFloat3("##Esc", &modeloActivo->getScale().x, 0.01f, 0.01f, 10.0f);
-
-        ImGui::Text("Propiedades del Material:");
-
-        glm::vec4 ambiente = modeloActivo->getMaterial().getAmbiente();
-        glm::vec4 difuso = modeloActivo->getMaterial().getDifuso();
-        glm::vec4 especular = modeloActivo->getMaterial().getEspecular();
-        float brillo = modeloActivo->getMaterial().getbrillo();
-
-        if (ImGui::ColorEdit4("Ambiente", &ambiente[0])) {
-            modeloActivo->getMaterial().setAmbiente(ambiente);
-        }
-        if (ImGui::ColorEdit4("Difuso", &difuso[0])) {
-            modeloActivo->getMaterial().setDifuso(difuso);
-        }
-        if (ImGui::ColorEdit4("Especular", &especular[0])) {
-            modeloActivo->getMaterial().setEspecular(especular);
-        }
-        if (ImGui::SliderFloat("Brillo", &brillo, 1.0f, 128.0f)) {
-            modeloActivo->getMaterial().setbrillo(brillo);
-        }
-
-        ImGui::Separator();
-    }
-}
         ImGui::End();
 
-        ImGui::SetNextWindowPos(ImVec2(10, 600), ImGuiCond_Once);
+        ImGui::SetNextWindowPos(ImVec2(350, 400), ImGuiCond_Once);
+        if (ImGui::Begin("Transformaciones")) {
+            auto& modelos = PAG::Renderer::getInstancia().getModelos();
+
+            if (modelos.empty()) {
+                ImGui::Text("elige un modelo para modificar");
+            } else {
+                static int modeloSeleccionado = 0;
+
+                if (modeloSeleccionado >= static_cast<int>(modelos.size())) {
+                    modeloSeleccionado = static_cast<int>(modelos.size()) - 1;
+                }
+                std::vector<std::string> nombresModelos;
+                std::vector<const char*> itemsCombo;
+                for (size_t i = 0; i < modelos.size(); ++i) {
+                    nombresModelos.push_back("Modelo " + std::to_string(i) + ": " + modelos[i]->getName());
+                }
+                for (const auto& nombre : nombresModelos) {
+                    itemsCombo.push_back(nombre.c_str());
+                }
+
+                ImGui::Combo("Modelo activo", &modeloSeleccionado, itemsCombo.data(), static_cast<int>(itemsCombo.size()));
+                ImGui::Separator();
+
+                PAG::Model* modeloActivo = modelos[modeloSeleccionado];
+
+                //trasladar
+                ImGui::Text("Traslacion:");
+                ImGui::DragFloat3("##Pos", &modeloActivo->getPosition().x, 0.05f);
+
+                //rotar
+                ImGui::Text("Rotacion:");
+                ImGui::SliderFloat3("##Rot", &modeloActivo->getRotation().x, -180.0f, 180.0f);
+
+                //escalado
+                ImGui::Text("Escala:");
+                ImGui::DragFloat3("##Esc", &modeloActivo->getScale().x, 0.01f, 0.01f, 10.0f);
+
+                ImGui::Separator();
+
+                ImGui::Text("Asignar material al modelo:");
+                if (!_listaMateriales.empty()) {
+                    std::vector<std::string> nombresMatAsig;
+                    std::vector<const char*> itemsMatAsig;
+                    for (size_t i = 0; i < _listaMateriales.size(); ++i) {
+                        nombresMatAsig.push_back("Material " + std::to_string(i));
+                    }
+                    for (const auto& nombre : nombresMatAsig) {
+                        itemsMatAsig.push_back(nombre.c_str());
+                    }
+
+                    ImGui::Combo("Elegir", &_matSeleccionadoAsignar, itemsMatAsig.data(), static_cast<int>(itemsMatAsig.size()));
+
+                    if (_matSeleccionadoAsignar >= _listaMateriales.size()) _matSeleccionadoAsignar = 0;
+
+                    if (ImGui::Button("Aplicar al Modelo Activo")) {
+                        modeloActivo->setMaterial(_listaMateriales[_matSeleccionadoAsignar]);
+                        addMensaje("Material asignado al modelo.");
+                    }
+                } else {
+                    ImGui::TextColored(ImVec4(1.0f, 0.5f, 0.0f, 1.0f), "Crea un material en el Gestor primero.");
+                }
+
+                ImGui::Separator();
+            }
+        }
+        ImGui::End();
+        //ventana para modo alambre
+        ImGui::SetNextWindowPos(ImVec2(10, 800), ImGuiCond_Once);
         if (ImGui::Begin("Visualizacion")) {
             bool modoAlambre = PAG::Renderer::getInstancia().isModoAlambre();
             if (ImGui::Checkbox("Modo Alambre", &modoAlambre)) {

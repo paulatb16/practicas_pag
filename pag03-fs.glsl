@@ -21,7 +21,7 @@ subroutine uniform fCalcularColor uMetodoColorElegido;
 //alambre
 subroutine (fCalcularColor)
 vec4 colorAlambre() {
-    return vec4(1.0, 0.0, 0.0, 1.0); // Rojo sólido
+    return vec4(1.0, 0.0, 0.0, 1.0); 
 }
 
 //modo solido

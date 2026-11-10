@@ -113,3 +113,48 @@ La otra ventana que he creado es para realizarle las tranformaciones al objeto q
 Por último incluyo un diagrama UML de como está el proyecto en la actualidad
 
 ![alt text](diagramas/diagrama-p6.png)
+
+
+
+
+## PRACTICA 7
+
+
+Para esta practica, solo he implementado una clase nueva, y las demás han sido modificadas. He utilizado las propiedades de los materiales y las subrutinas.
+
+Antes de explicar las decisiones que he tomado, voy a explicar como se usa la aplicación.
+
+1. Se escribe en la pestaña del shader program el shader program que vamos a usar, en este caso pag03
+2. Se carga el modelo en la pestaña de modelos, debe ser obj o sino no aparecerá para seleccionarlo. 
+3. se realizan las tranformaciones del modelo, seleccionando el numero de modelo y aplicandolas en la pestaña de transformaciones
+4. Se elige si el objeto quiere ser mostrado en modo alambre o no.
+5. En el caso del modo liso, habrá que añadir un material para que se vea bien. Esto lo haremos creando un nuevo material en la ventana de materiales, modificandolo al gusto, y agregando ese material al objeto en la ventana de transformaciones.
+
+#### Clase Material
+La clase material es la nueva clase que añadimos. En esta he puesto los atributos del material (color difuso, ambiental, especular y el brillo ), aunque solo vaya a utilizar la difusa, ya que al no tener luces como tal implementadas lo unico que queremos es que se vea un color plano. También he añadido los métodos get y set para cada atributo.
+
+#### Clase Modelo
+He adaptado la clase modelo para que cada uno tenga su propio material. En su metodo render he añadido los setuniform que vamos a pasar al shader program con las propiedades del materiales.
+
+#### Clase Shader program 
+En shader program he añadido los metodos uniform mencionados anteriormente, para pasar los distintos materiales. Además, también he creado el metodo setsubrutina, que usa dos funciones de opengl, una que me coge el indice de la subrutina que voy a utilizar, y otra que lo envía. Estas subrutinas se usarán más adelante para el tema de cambiar de alambre a color plano.
+
+#### Vertex y fragment shaders
+En el vertex y el fragment shader, primero he actualizado los atributos de entrada y salida de esta manera en un struct:
+
+out salidaVS {
+    vec3 posicionV;
+    vec3 normalV;
+    vec2 texCoordV;
+} salida;
+
+A continuacion, en el fragment shader he hecho dos subrutinas para elegir el modo de colorear: la primera usa el color para el modo alambre (en color rojo para que se aprecie bien) y la segunda con el material, en modo liso, utilizando el color difuso del material.
+
+
+
+#### Clase render
+En la clase render solo he actualizado su metodo refrescar, para que si esta en modo alambre lo muestre en modo alambre y le añada el color que hemos definido en el fragment shader, y si es el modo normal que lo muestre plano con el material elegido.7
+
+
+#### Clase gui
+Como ventanas para la clase gui, he decidido hacer 2 ventanas nuevas y modificar una existente. La primera ventana es para marcar si se quieren ver los objeto en modo alambre o no. La siguiente ventana es para ir añadiendo materiales, y poder modificarlos al gusto (en este caso solo el color difuso). La ventana que he modificado ha sido donde anteriormente tenia las transformaciones, a la cual le he añadido un apartado para que puedas añadir un material al objeto.

@@ -7,6 +7,7 @@
 #include "imgui.h"
 #include <imfilebrowser.h>
 #include "Camara.h"
+#include "Material.h"
 namespace PAG {
 
     class gui {
@@ -18,6 +19,9 @@ namespace PAG {
         TipoMovimientoCamara movimientoActual = TipoMovimientoCamara::ZOOM;
         bool camaraActiva = false;
         ImGui::FileBrowser fileDialog;
+        std::vector<PAG::Material> _listaMateriales; //lista de materiales que hay creados
+        int _matSeleccionadoEditor = 0;
+        int _matSeleccionadoAsignar = 0;
 
     public:
         virtual ~gui();
